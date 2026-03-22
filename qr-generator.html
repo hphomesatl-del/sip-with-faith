@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sip with Faith - QR Code Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 700px;
+            width: 100%;
+            padding: 60px 40px;
+            text-align: center;
+        }
+        
+        .header {
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            color: #764ba2;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .tagline {
+            color: #888;
+            font-size: 14px;
+        }
+        
+        .input-group {
+            margin: 30px 0;
+        }
+        
+        label {
+            display: block;
+            color: #764ba2;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: monospace;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.1);
+        }
+        
+        .button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(118, 75, 162, 0.3);
+        }
+        
+        .qr-container {
+            margin: 40px 0;
+            padding: 30px;
+            background: #f5f5f5;
+            border-radius: 15px;
+            display: none;
+        }
+        
+        .qr-container.active {
+            display: block;
+        }
+        
+        #qrcode {
+            display: inline-block;
+            padding: 10px;
+            background: white;
+            border-radius: 10px;
+        }
+        
+        .download-btn {
+            background: #10b981;
+            margin-top: 20px;
+        }
+        
+        .download-btn:hover {
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+        }
+        
+        .help-text {
+            color: #888;
+            font-size: 12px;
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+        
+        .example {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: left;
+            border-radius: 5px;
+            font-size: 13px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>☕ QR Code Generator</h1>
+            <p class="tagline">Create shareable QR codes for Sip with Faith</p>
+        </div>
+        
+        <div class="input-group">
+            <label for="urlInput">Enter Your Website URL:</label>
+            <input 
+                type="url" 
+                id="urlInput" 
+                placeholder="https://sip-with-faith.vercel.app" 
+                value="https://sip-with-faith.vercel.app"
+            >
+            <p class="help-text">📌 After deploying your site, paste the URL here to generate a QR code</p>
+        </div>
+        
+        <button class="button" onclick="generateQR()">🔳 Generate QR Code</button>
+        
+        <div class="qr-container" id="qrContainer">
+            <p style="color: #764ba2; margin-bottom: 20px; font-weight: 600;">📱 Your QR Code:</p>
+            <div id="qrcode"></div>
+            <button class="button download-btn" onclick="downloadQR()">📥 Download as PNG</button>
+            
+            <div class="example">
+                <strong>💡 How to use:</strong>
+                <ul style="margin-top: 10px; margin-left: 20px;">
+                    <li>Print this QR code and display it in your office, café, or home</li>
+                    <li>People can scan it with their phone camera</li>
+                    <li>They'll instantly get a random Bible verse</li>
+                    <li>Share on social media or email</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateQR() {
+            const url = document.getElementById('urlInput').value.trim();
+            
+            if (!url) {
+                alert('Please enter a valid URL');
+                return;
+            }
+            
+            // Clear previous QR code
+            document.getElementById('qrcode').innerHTML = '';
+            
+            // Generate new QR code
+            new QRCode(document.getElementById('qrcode'), {
+                text: url,
+                width: 300,
+                height: 300,
+                colorDark: '#764ba2',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            
+            // Show container
+            document.getElementById('qrContainer').classList.add('active');
+        }
+        
+        function downloadQR() {
+            // Get the canvas from the QR code
+            const canvas = document.querySelector('#qrcode canvas');
+            
+            if (!canvas) {
+                alert('Please generate a QR code first');
+                return;
+            }
+            
+            // Create download link
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = 'sip-with-faith-qr-code.png';
+            link.click();
+        }
+        
+        // Generate QR on Enter
+        document.getElementById('urlInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') generateQR();
+        });
+        
+        // Auto-generate on load with default URL
+        window.addEventListener('load', generateQR);
+    </script>
+</body>
+</html>
