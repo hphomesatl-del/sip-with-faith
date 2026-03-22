@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sip with Faith - Today's Verse</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 60px 40px;
+            text-align: center;
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .header {
+            margin-bottom: 40px;
+        }
+        
+        .logo {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        h1 {
+            color: #764ba2;
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+        
+        .tagline {
+            color: #888;
+            font-size: 14px;
+            font-style: italic;
+        }
+        
+        .verse-container {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            border-left: 5px solid #764ba2;
+            padding: 40px;
+            margin: 40px 0;
+            border-radius: 10px;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .verse-text {
+            color: #333;
+            font-size: 22px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            font-weight: 500;
+            min-height: 80px;
+        }
+        
+        .verse-reference {
+            color: #764ba2;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(118, 75, 162, 0.3);
+        }
+        
+        .button:active {
+            transform: translateY(0);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+        
+        .button-secondary {
+            background: #f0f0f0;
+            color: #764ba2;
+            flex: 1;
+            font-size: 14px;
+            padding: 12px 20px;
+        }
+        
+        .button-secondary:hover {
+            box-shadow: 0 5px 15px rgba(118, 75, 162, 0.2);
+            background: #e8e8e8;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            color: #999;
+            font-size: 12px;
+        }
+        
+        .scan-count {
+            color: #764ba2;
+            font-size: 14px;
+            margin-top: 20px;
+            font-weight: 600;
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .loading {
+            display: none;
+        }
+        
+        .loading.active {
+            display: block;
+            color: #764ba2;
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        
+        .share-text {
+            color: #888;
+            font-size: 12px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">☕ 🙏</div>
+            <h1>Sip with Faith</h1>
+            <p class="tagline">Your moment of daily inspiration</p>
+        </div>
+        
+        <div id="loadingSpinner" class="loading active">
+            ✨ Loading your verse...
+        </div>
+        
+        <div id="verseContent" style="display: none;">
+            <div class="verse-container">
+                <div class="verse-text" id="verseText">Loading...</div>
+                <div class="verse-reference" id="verseRef"></div>
+            </div>
+            
+            <div class="scan-count">
+                🔄 Scan #<span id="scanNumber">1</span>
+            </div>
+            
+            <div class="button-group">
+                <button class="button" style="flex: 1;" onclick="location.reload()">
+                    ✨ Another Verse
+                </button>
+            </div>
+            
+            <div class="button-group">
+                <button class="button-secondary" onclick="shareVerse()">
+                    📱 Share
+                </button>
+                <button class="button-secondary" onclick="copyVerse()">
+                    📋 Copy
+                </button>
+            </div>
+            
+            <div class="share-text">
+                💡 Tip: Share this QR code with others!
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>🙏 May your day be filled with faith and grace</p>
+        </div>
+    </div>
+
+    <script>
+        // Top 100 Most Searched Bible Verses
+        const topVerses = [
+            { text: "For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.", ref: "John 3:16" },
+            { text: "I can do all this through him who gives me strength.", ref: "Philippians 4:13" },
+            { text: "Trust in the Lord with all your heart and lean not on your own understanding.", ref: "Proverbs 3:5" },
+            { text: "For I know the plans I have for you, declares the Lord, plans for welfare and not for evil, to give you a future and a hope.", ref: "Jeremiah 29:11" },
+            { text: "And we know that in all things God works for the good of those who love him, who have been called according to his purpose.", ref: "Romans 8:28" },
+            { text: "Therefore do not worry about tomorrow, for tomorrow will worry about itself. Each day has enough trouble of its own.", ref: "Matthew 6:34" },
+            { text: "Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.", ref: "Joshua 1:9" },
+            { text: "Love is patient, love is kind. It does not envy, it does not boast, it is not proud.", ref: "1 Corinthians 13:4" },
+            { text: "Jesus answered, 'I am the way and the truth and the life. No one comes to the Father except through me.'", ref: "John 14:6" },
+            { text: "Come to me, all you who are weary and burdened, and I will give you rest.", ref: "Matthew 11:28" },
+            { text: "Let the peace of Christ rule in your hearts, since as members of one body you were called to peace. And be thankful.", ref: "Colossians 3:15" },
+            { text: "Now we see only a reflection as in a mirror; then we shall see face to face. Now I know in part; then I shall know fully, even as I am fully known.", ref: "1 Corinthians 13:12" },
+            { text: "But seek first his kingdom and his righteousness, and all these things will be given to you as well.", ref: "Matthew 6:33" },
+            { text: "The Lord is my shepherd, I lack nothing. He makes me lie down in green pastures, he leads me beside quiet waters.", ref: "Psalm 23:1-2" },
+            { text: "For it is by grace you have been saved, through faith—and this is not from yourselves, it is the gift of God.", ref: "Ephesians 2:8" },
+            { text: "I have told you all this, so that you may have peace in me. Here on earth you will have many trials and sorrows. But take heart, because I have overcome the world.", ref: "John 16:33" },
+            { text: "May the Lord bless you and protect you. May the Lord smile on you and be gracious to you. May the Lord show you his favor and give you his peace.", ref: "Numbers 6:24-26" },
+            { text: "But the fruit of the Spirit is love, joy, peace, forbearance, kindness, goodness, faithfulness, gentleness and self-control.", ref: "Galatians 5:22-23" },
+            { text: "Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God.", ref: "Philippians 4:6" },
+            { text: "Therefore, if anyone is in Christ, the new creation has come: The old has gone, the new is here!", ref: "2 Corinthians 5:17" },
+            { text: "For we are God's handiwork, created in Christ Jesus to do good works, which God prepared in advance for us to do.", ref: "Ephesians 2:10" },
+            { text: "The righteous cry out, and the Lord hears them; he delivers them from all their troubles.", ref: "Psalm 34:17" },
+            { text: "And my God will meet all your needs according to the riches of his glory in Christ Jesus.", ref: "Philippians 4:19" },
+            { text: "Let us not love with words or speech but with actions and in truth.", ref: "1 John 3:18" },
+            { text: "Blessed is the one who trusts in the Lord, whose confidence is in him.", ref: "Jeremiah 17:7" },
+            { text: "Therefore each of you must put off falsehood and speak truthfully to your neighbor, for we are all members of one body.", ref: "Ephesians 4:25" },
+            { text: "Praise the Lord, my soul; all my inmost being, praise his holy name.", ref: "Psalm 103:1" },
+            { text: "For God did not give us a spirit of fear, but of power, love and self-discipline.", ref: "2 Timothy 1:7" },
+            { text: "The beginning of wisdom is this: Get wisdom. Though it cost all you have, get understanding.", ref: "Proverbs 4:7" },
+            { text: "A new command I give you: Love one another. As I have loved you, so you must love one another.", ref: "John 13:34" },
+            { text: "Every good gift and every perfect gift is from above, coming down from the Father of the heavenly lights.", ref: "James 1:17" },
+            { text: "If any of you lacks wisdom, you should ask God, who gives generously to all without finding fault, and it will be given to you.", ref: "James 1:5" },
+            { text: "Rejoice always, pray continually, give thanks in all circumstances; for this is God's will for you in Christ Jesus.", ref: "1 Thessalonians 5:16-18" },
+            { text: "Cast all your anxiety on him because he cares for you.", ref: "1 Peter 5:7" },
+            { text: "But those who hope in the Lord will renew their strength. They will soar on wings like eagles.", ref: "Isaiah 40:31" },
+            { text: "You make known to me the path of life; you will fill me with joy in your presence, with eternal pleasures at your right hand.", ref: "Psalm 16:11" },
+            { text: "Let the message of Christ dwell among you richly as you teach and admonish one another with all wisdom through psalms, hymns, and songs from the Spirit.", ref: "Colossians 3:16" },
+            { text: "You, dear children, are from God and have overcome them, because the one who is in you is greater than the one who is in the world.", ref: "1 John 4:4" },
+            { text: "In my Father's house are many rooms; if that were not so, would I have told you that I am going there to prepare a place for you?", ref: "John 14:2" },
+            { text: "Now to him who is able to do immeasurably more than all we ask or imagine, according to his power that is at work within us.", ref: "Ephesians 3:20" },
+            { text: "I have been crucified with Christ and I no longer live, but Christ lives in me. The life I now live in the body, I live by faith in the Son of God.", ref: "Galatians 2:20" },
+            { text: "Therefore, as God's chosen people, holy and dearly loved, clothe yourselves with compassion, kindness, humility, gentleness and patience.", ref: "Colossians 3:12" },
+            { text: "I am the vine; you are the branches. If you remain in me and I in you, you will bear much fruit; apart from me you can do nothing.", ref: "John 15:5" },
+            { text: "For by grace you have been saved through faith. And this is not your own doing; it is the gift of God.", ref: "Ephesians 2:8" },
+            { text: "The fear of the Lord is the beginning of knowledge, but fools despise wisdom and instruction.", ref: "Proverbs 1:7" },
+            { text: "No, in all these things we are more than conquerors through him who loved us.", ref: "Romans 8:37" },
+            { text: "The light shines in the darkness, and the darkness has not overcome it.", ref: "John 1:5" },
+            { text: "Peace I leave with you; my peace I give you. I do not give to you as the world gives. Do not let your hearts be troubled and do not be afraid.", ref: "John 14:27" },
+            { text: "You, Lord, keep my lamp burning; my God turns my darkness into light.", ref: "Psalm 18:28" },
+            { text: "Humble yourselves, therefore, under God's mighty hand, that he may lift you up in due time.", ref: "1 Peter 5:6" },
+            { text: "And God is able to bless you abundantly, so that in all things at all times, having all that you need, you will abound in every good work.", ref: "2 Corinthians 9:8" },
+            { text: "For we walk by faith, not by sight.", ref: "2 Corinthians 5:7" },
+            { text: "And we know that the Son of God has come and has given us understanding, so that we may know him who is true.", ref: "1 John 5:20" },
+            { text: "I praise you because I am fearfully and wonderfully made; your works are wonderful, I know that full well.", ref: "Psalm 139:14" },
+            { text: "Let no debt remain outstanding, except the continuing debt to love one another, for whoever loves others has fulfilled the law.", ref: "Romans 13:8" },
+            { text: "Therefore, I urge you, brothers and sisters, in view of God's mercy, to offer your bodies as a living sacrifice, holy and pleasing to God.", ref: "Romans 12:1" },
+            { text: "Delight yourself in the Lord, and he will give you the desires of your heart.", ref: "Psalm 37:4" },
+            { text: "But Jesus said, 'Someone touched me; I know that power has gone out from me.'", ref: "Luke 8:46" },
+            { text: "Ask and it will be given to you; seek and you will find; knock and the door will be opened to you.", ref: "Matthew 7:7" },
+            { text: "But in your hearts revere Christ as Lord. Always be prepared to give an answer to everyone who asks you to give the reason for the hope that you have.", ref: "1 Peter 3:15" },
+            { text: "So whether you eat or drink or whatever you do, do it all for the glory of God.", ref: "1 Corinthians 10:31" },
+            { text: "I can declare your righteousness, though I know them to be beyond my comprehension.", ref: "Psalm 71:15" },
+            { text: "The love of money is a root of all kinds of evil. Some people, eager for money, have wandered from the faith and pierced themselves with many griefs.", ref: "1 Timothy 6:10" },
+            { text: "And so we know and rely on the love God has for us. God is love. Whoever lives in love lives in God, and God in them.", ref: "1 John 4:16" },
+            { text: "Fight the good fight of the faith. Take hold of the eternal life to which you were called.", ref: "1 Timothy 6:12" },
+            { text: "Commit to the Lord whatever you do, and your plans will succeed.", ref: "Proverbs 16:3" },
+            { text: "But his delight is not in the strength of the horse, nor his pleasure in the legs of the warrior.", ref: "Psalm 147:10" },
+            { text: "The wise inherit honour, but the foolish get only shame.", ref: "Proverbs 3:35" },
+            { text: "Therefore each of you must put off falsehood and speak truthfully to your neighbour, for we are all members of one body.", ref: "Ephesians 4:25" },
+            { text: "He heals the brokenhearted and binds up their wounds.", ref: "Psalm 147:3" },
+            { text: "For the Son of Man came to seek and to save the lost.", ref: "Luke 19:10" },
+            { text: "You are worthy, our Lord and God, to receive glory and honor and power, for you created all things.", ref: "Revelation 4:11" },
+            { text: "So God created mankind in his own image, in the image of God he created them; male and female he created them.", ref: "Genesis 1:27" },
+            { text: "I have much to write to you, but I do not want to do so with pen and ink.", ref: "3 John 1:13" },
+            { text: "And over all these virtues put on love, which binds them all together in perfect unity.", ref: "Colossians 3:14" },
+            { text: "Set your minds on things above, not on earthly things.", ref: "Colossians 3:2" },
+            { text: "Being confident of this, that he who began a good work in you will carry it on to completion until the day of Christ Jesus.", ref: "Philippians 1:6" },
+            { text: "I have hidden your word in my heart that I might not sin against you.", ref: "Psalm 119:11" },
+            { text: "Let the morning bring me word of your unfailing love, for I have put my trust in you.", ref: "Psalm 143:8" }
+        ];
+
+        function getRandomVerse() {
+            return topVerses[Math.floor(Math.random() * topVerses.length)];
+        }
+
+        function loadVerse() {
+            // Simulate loading delay for better UX
+            setTimeout(() => {
+                const verse = getRandomVerse();
+                document.getElementById('verseText').textContent = verse.text;
+                document.getElementById('verseRef').textContent = verse.ref;
+                
+                // Track scans
+                const scanCount = parseInt(sessionStorage.getItem('scanCount') || '0') + 1;
+                sessionStorage.setItem('scanCount', scanCount);
+                document.getElementById('scanNumber').textContent = scanCount;
+                
+                // Hide loading, show verse
+                document.getElementById('loadingSpinner').classList.remove('active');
+                document.getElementById('verseContent').style.display = 'block';
+            }, 500);
+        }
+
+        function shareVerse() {
+            const verseText = document.getElementById('verseText').textContent;
+            const verseRef = document.getElementById('verseRef').textContent;
+            const shareText = `"${verseText}" - ${verseRef}\n\n☕ 🙏 Sip with Faith`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Sip with Faith',
+                    text: shareText,
+                    url: window.location.href
+                });
+            } else {
+                copyVerse();
+            }
+        }
+
+        function copyVerse() {
+            const verseText = document.getElementById('verseText').textContent;
+            const verseRef = document.getElementById('verseRef').textContent;
+            const fullText = `"${verseText}" - ${verseRef}`;
+            
+            navigator.clipboard.writeText(fullText).then(() => {
+                alert('Verse copied to clipboard! 📋');
+            });
+        }
+
+        // Load verse on page load
+        window.addEventListener('load', loadVerse);
+    </script>
+</body>
+</html>
